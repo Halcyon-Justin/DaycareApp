@@ -2,8 +2,5 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Optional DaisyUI theme override */
-:root {
-  --rounded-box: 1rem;
-  --rounded-btn: 0.5rem;
-}
+/* optional: import daisyUI styles explicitly */
+@import "daisyui/dist/full.css";
