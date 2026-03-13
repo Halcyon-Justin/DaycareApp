@@ -1,15 +1,14 @@
 package halcyon.clemncare.app.dto;
 
-import java.time.LocalDate;
-
 import halcyon.clemncare.app.enums.InvoiceStatus;
-import halcyon.clemncare.app.model.Family;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 public class InvoiceDTO {
     private Long id;
-    private Family family;
+    private Long familyId;
     private LocalDate dueDate;
     private Long amountDue;
     private InvoiceStatus status;

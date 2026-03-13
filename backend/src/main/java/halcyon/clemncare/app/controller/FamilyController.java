@@ -1,23 +1,17 @@
 package halcyon.clemncare.app.controller;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import halcyon.clemncare.app.dto.FamilyDTO;
+import halcyon.clemncare.app.mapper.FamilyMapper;
 import halcyon.clemncare.app.model.Family;
 import halcyon.clemncare.app.response.ResponseHandler;
 import halcyon.clemncare.app.service.FamilyService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/families")
@@ -26,41 +20,41 @@ public class FamilyController {
     @Autowired
     private FamilyService familyService;
 
-    @CrossOrigin
+    @Autowired
+    private FamilyMapper familyMapper;
+
     @GetMapping("/")
-    public ResponseEntity<Object> getFamilies() {
-        return ResponseHandler.responseBuilder("Requested All Family Data", HttpStatus.OK,
-                familyService.getAllFamilies());
+    public ResponseEntity<Object> getAllFamilies() {
+        List<FamilyDTO> dtos = familyService.getAllFamilies()
+                .stream()
+                .map(familyMapper::toDTO)
+                .collect(Collectors.toList());
+        return ResponseHandler.responseBuilder("All Families", HttpStatus.OK, dtos);
     }
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<Object> getFamily(@PathVariable Long id) {
-        Optional<Family> familyOptional = familyService.getFamily(id);
-        if(familyOptional.isPresent()) {
-            return ResponseHandler.responseBuilder("Requested Specific Family Data", HttpStatus.OK, familyOptional.get());
-        } else {
-            return ResponseHandler.responseBuilder("Family not found", HttpStatus.NOT_FOUND, null);
-        }
+        Family family = familyService.getFamily(id);
+        return ResponseHandler.responseBuilder("Requested Family", HttpStatus.OK, familyMapper.toDTO(family));
     }
 
     @PostMapping
-    public ResponseEntity<Object> createFamily(@RequestBody FamilyDTO familyDTO) {
-        try {
-            Family createdFamily = familyService.createFamily(familyDTO);
-            return ResponseHandler.responseBuilder("Family Created Successfully", HttpStatus.CREATED,
-                    createdFamily);
-        } catch (Exception e) {
-            return ResponseHandler.responseBuilder(e.getMessage(), HttpStatus.BAD_REQUEST, null);
-        }
+    public ResponseEntity<Object> createFamily(@RequestBody FamilyDTO dto) {
+        Family family = familyMapper.toEntity(dto);
+        Family saved = familyService.createFamily(family);
+        return ResponseHandler.responseBuilder("Family Created", HttpStatus.CREATED, familyMapper.toDTO(saved));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateFamily(@PathVariable Long id, @RequestBody FamilyDTO dto) {
+        Family family = familyMapper.toEntity(dto);
+        Family updated = familyService.updateFamily(id, family);
+        return ResponseHandler.responseBuilder("Family Updated", HttpStatus.OK, familyMapper.toDTO(updated));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteFamily(@PathVariable Long id) {
-        if(familyService.getFamily(id) != null) {
-            familyService.deleteFamily(id);
-            return ResponseHandler.responseBuilder("Family Deleted Successfully", HttpStatus.OK, null);
-        } else {
-            return ResponseHandler.responseBuilder("Family not found", HttpStatus.NOT_FOUND, null);
-        }
+        familyService.deleteFamily(id);
+        return ResponseHandler.responseBuilder("Family Deleted", HttpStatus.OK, null);
     }
 }

@@ -1,77 +1,60 @@
 package halcyon.clemncare.app.service.implementation;
 
-import java.beans.PropertyDescriptor;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import halcyon.clemncare.app.dto.InvoiceDTO;
+import halcyon.clemncare.app.exception.FamilyNotFoundException;
 import halcyon.clemncare.app.exception.InvoiceNotFoundException;
+import halcyon.clemncare.app.model.Family;
 import halcyon.clemncare.app.model.Invoice;
 import halcyon.clemncare.app.repositories.FamilyRepository;
 import halcyon.clemncare.app.repositories.InvoiceRepository;
-import halcyon.clemncare.app.service.InvoiceCalculationService;
 import halcyon.clemncare.app.service.InvoiceService;
-import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
-    InvoiceRepository invoiceRepository;
+    private InvoiceRepository invoiceRepository;
 
     @Autowired
-    FamilyRepository familyRepository;
-
-    @Autowired
-    InvoiceCalculationService invoiceCalculationService;
+    private FamilyRepository familyRepository;
 
     @Override
-    @Transactional
-    public Invoice createInvoice(InvoiceDTO invoiceDTO) {          
-            Invoice invoice = new Invoice();
-            invoice.setFamily(invoiceDTO.getFamily());
-            invoice.setDueDate(invoiceDTO.getDueDate());
-            Long amountDue = invoiceCalculationService.calculateAmountDue(invoiceDTO.getFamily().getId());
-            invoice.setAmountDue(amountDue);
-            return invoiceRepository.save(invoice);
+    public Invoice createInvoice(Invoice invoice) {
+        if (invoice.getFamily() != null && invoice.getFamily().getId() != null) {
+            Family family = familyRepository.findById(invoice.getFamily().getId())
+                    .orElseThrow(() -> new FamilyNotFoundException(
+                            "Family with ID " + invoice.getFamily().getId() + " not found"));
+            invoice.setFamily(family);
+        }
+        return invoiceRepository.save(invoice);
+    }
+
+    @Override
+    public Invoice updateInvoice(Long id, Invoice invoice) {
+        Invoice existing = invoiceRepository.findById(id)
+                .orElseThrow(() -> new InvoiceNotFoundException("Invoice with ID " + id + " not found"));
+
+        if (invoice.getDueDate() != null) existing.setDueDate(invoice.getDueDate());
+        if (invoice.getAmountDue() != null) existing.setAmountDue(invoice.getAmountDue());
+        if (invoice.getStatus() != null) existing.setStatus(invoice.getStatus());
+
+        if (invoice.getFamily() != null && invoice.getFamily().getId() != null) {
+            Family family = familyRepository.findById(invoice.getFamily().getId())
+                    .orElseThrow(() -> new FamilyNotFoundException(
+                            "Family with ID " + invoice.getFamily().getId() + " not found"));
+            existing.setFamily(family);
         }
 
-    @Override
-    public Invoice updateInvoice(Long id, InvoiceDTO invoiceDTO) {
-        Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
-        if (optionalInvoice.isPresent()) {
-            Invoice existingInvoice = optionalInvoice.get();
-            BeanUtils.copyProperties(invoiceDTO, existingInvoice);
-            return invoiceRepository.save(existingInvoice);
-        } else {
-            throw new InvoiceNotFoundException("Invoice with ID: " + id + " does not exist");
-        }
+        return invoiceRepository.save(existing);
     }
 
     @Override
-    public Invoice partialUpdateInvoice(Long id, InvoiceDTO invoiceDTO) {
-        Invoice existinInvoice = invoiceRepository.findById(id).orElse(null);
-        BeanUtils.copyProperties(invoiceDTO, existinInvoice, getNullPropertyNames(invoiceDTO));
-        return invoiceRepository.save(existinInvoice);
-    }
-
-    @Override
-    public void deleteInvoice(Long invoiceId) {
-        invoiceRepository.deleteById(invoiceId);
-    }
-
-    @Override
-    public Optional<Invoice> getInvoice(Long invoiceId) {
-        return invoiceRepository.findById(invoiceId);
+    public Invoice getInvoice(Long id) {
+        return invoiceRepository.findById(id)
+                .orElseThrow(() -> new InvoiceNotFoundException("Invoice with ID " + id + " not found"));
     }
 
     @Override
@@ -80,28 +63,15 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<Invoice> findInvoicesByDueDate(Date dueDate) {
-        return invoiceRepository.findByDueDate(dueDate);
+    public void deleteInvoice(Long id) {
+        if (!invoiceRepository.existsById(id)) {
+            throw new InvoiceNotFoundException("Invoice with ID " + id + " not found");
+        }
+        invoiceRepository.deleteById(id);
     }
 
     @Override
-    public List<Invoice> findInvoicesByFamilyId(Long familyId) {
+    public List<Invoice> getInvoicesByFamilyId(Long familyId) {
         return invoiceRepository.findByFamilyId(familyId);
     }
-
-    private String[] getNullPropertyNames(InvoiceDTO invoiceDTO) {
-        final BeanWrapper src = new BeanWrapperImpl(invoiceDTO);
-        PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
-        Set<String> emptyNames = new HashSet<>();
-        for (PropertyDescriptor pd : pds) {
-            Object srcValue = src.getPropertyValue(pd.getName());
-            if (srcValue == null)
-                emptyNames.add(pd.getName());
-        }
-
-        String[] result = new String[emptyNames.size()];
-        return emptyNames.toArray(result);
-    }
-
 }

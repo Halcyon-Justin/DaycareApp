@@ -1,19 +1,12 @@
 package halcyon.clemncare.app.service.implementation;
 
-import java.beans.PropertyDescriptor;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import halcyon.clemncare.app.dto.ChildDTO;
 import halcyon.clemncare.app.exception.ChildNotFoundException;
 import halcyon.clemncare.app.exception.FamilyNotFoundException;
 import halcyon.clemncare.app.model.Child;
@@ -32,50 +25,55 @@ public class ChildServiceImpl implements ChildService {
     private FamilyRepository familyRepository;
 
     @Override
-    public Child createChild(ChildDTO childDTO) {
-        Optional<Family> familyOptional = familyRepository.findById(childDTO.getFamilyId());
-        if (familyOptional.isPresent()) {
-            Child child = new Child();
-
-            // Assign values from the DTO to the child
-            BeanUtils.copyProperties(childDTO, child);
+    public Child createChild(Child child) {
+        // Ensure family exists
+        if (child.getFamily() != null && child.getFamily().getId() != null) {
+            Optional<Family> familyOptional = familyRepository.findById(child.getFamily().getId());
+            if (!familyOptional.isPresent()) {
+                throw new FamilyNotFoundException(
+                        "Family with ID " + child.getFamily().getId() + " not found");
+            }
             child.setFamily(familyOptional.get());
-
-            return childRepository.save(child);
-        } else {
-            // Handle the case where the associated family does not exist
-            throw new FamilyNotFoundException("Family with ID " + childDTO.getFamilyId() + " not found");
         }
+        return childRepository.save(child);
     }
 
     @Override
-    public Child updateChild(Long id, ChildDTO childDTO) {
-        Optional<Child> optionalChild = childRepository.findById(id);
-        if (optionalChild.isPresent()) {
-            Child existingChild = optionalChild.get();
-            BeanUtils.copyProperties(childDTO, existingChild, getNullPropertyNames(childDTO));
-            return childRepository.save(existingChild);
-        } else {
-            throw new ChildNotFoundException("Child with ID " + id + " not found");
+    public Child updateChild(Long id, Child child) {
+        Child existingChild = childRepository.findById(id)
+                .orElseThrow(() -> new ChildNotFoundException("Child with ID " + id + " not found"));
+
+        // Update non-null fields
+        if (child.getFirstName() != null) existingChild.setFirstName(child.getFirstName());
+        if (child.getLastName() != null) existingChild.setLastName(child.getLastName());
+        if (child.getDateOfBirth() != null) existingChild.setDateOfBirth(child.getDateOfBirth());
+        existingChild.setActive(child.isActive()); // boolean default false if null
+        if (child.getNotes() != null) existingChild.setNotes(child.getNotes());
+
+        if (child.getFamily() != null && child.getFamily().getId() != null) {
+            Family family = familyRepository.findById(child.getFamily().getId())
+                    .orElseThrow(() -> new FamilyNotFoundException(
+                            "Family with ID " + child.getFamily().getId() + " not found"));
+            existingChild.setFamily(family);
         }
+
+        return childRepository.save(existingChild);
     }
 
     @Override
-    public Child partialUpdateChild(Long id, ChildDTO childDTO) {
-        Optional<Child> optionalChild = childRepository.findById(id);
-        if (optionalChild.isPresent()) {
-            Child existingChild = optionalChild.get();
-            BeanUtils.copyProperties(childDTO, existingChild, getNullPropertyNames(childDTO));
-            return childRepository.save(existingChild);
-        } else {
-            throw new ChildNotFoundException("Child with ID " + id + " not found");
-        }
+    public Child partialUpdateChild(Long id, Child child) {
+        // Partial update is identical to update here, but could be customized
+        return updateChild(id, child);
     }
 
     @Override
     public void deleteChild(Long childId) {
+        if (!childRepository.existsById(childId)) {
+            throw new ChildNotFoundException("Child with ID " + childId + " not found. Cannot delete.");
+        }
         childRepository.deleteById(childId);
     }
+
 
     @Override
     public Child getChild(Long childId) {
@@ -89,35 +87,18 @@ public class ChildServiceImpl implements ChildService {
 
     @Override
     public List<Child> findChildrenByAge(int age) {
-        List<Child> allChildren = childRepository.findAll();
-
-        List<Child> childrenByAge = allChildren.stream()
+        List<Child> childrenByAge = childRepository.findAll().stream()
                 .filter(child -> child.getAge() == age)
                 .collect(Collectors.toList());
 
         if (childrenByAge.isEmpty()) {
             throw new ChildNotFoundException("No children found for the specified age");
-        } else {
-            return childrenByAge;
         }
+        return childrenByAge;
     }
 
+    @Override
     public List<Child> getActiveChildren() {
         return childRepository.findByIsActiveTrue();
-    }
-
-    private String[] getNullPropertyNames(ChildDTO childDTO) {
-        final BeanWrapper src = new BeanWrapperImpl(childDTO);
-        PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
-        Set<String> emptyNames = new HashSet<>();
-        for (PropertyDescriptor pd : pds) {
-            Object srcValue = src.getPropertyValue(pd.getName());
-            if (srcValue == null)
-                emptyNames.add(pd.getName());
-        }
-
-        String[] result = new String[emptyNames.size()];
-        return emptyNames.toArray(result);
     }
 }

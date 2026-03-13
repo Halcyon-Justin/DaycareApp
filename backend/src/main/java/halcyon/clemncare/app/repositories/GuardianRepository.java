@@ -1,5 +1,6 @@
 package halcyon.clemncare.app.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,5 +11,7 @@ import halcyon.clemncare.app.model.Guardian;
 @Repository
 public interface GuardianRepository extends JpaRepository<Guardian, Long> {
     Optional<Guardian> findById(Long id);
+    List<Guardian> findByFamilyIdAndIsEmergencyContactTrue(Long familyId);
+    List<Guardian> findByFamilyId(Long familyId);
 
 }

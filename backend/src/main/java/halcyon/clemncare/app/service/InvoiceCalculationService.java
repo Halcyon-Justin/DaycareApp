@@ -14,17 +14,17 @@ public class InvoiceCalculationService {
     private FamilyService familyService;
 
 
-    public Long calculateAmountDue(Long familyId) {
-        List<Child> children = familyService.getActiveChildrenFromFamilyId(familyId);
-        Long amountDue = 0L;
-        for (Child child : children) {
-            if(child.getAge() < 2) {
-                amountDue += 60L * 5;
-            } else {
-                amountDue += 50L;
-            }
-        }
-        return amountDue;
-    }
+    // public Long calculateAmountDue(Long familyId) {
+    //     List<Child> children = familyService.getActiveChildrenFromFamilyId(familyId);
+    //     Long amountDue = 0L;
+    //     for (Child child : children) {
+    //         if(child.getAge() < 2) {
+    //             amountDue += 60L * 5;
+    //         } else {
+    //             amountDue += 50L;
+    //         }
+    //     }
+    //     return amountDue;
+    // }
     
 }

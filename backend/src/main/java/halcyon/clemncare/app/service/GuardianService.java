@@ -1,21 +1,20 @@
 package halcyon.clemncare.app.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import halcyon.clemncare.app.dto.GuardianDTO;
 import halcyon.clemncare.app.model.Guardian;
 
+import java.util.List;
+
 public interface GuardianService {
-    public Guardian createGuardian(GuardianDTO guardianDTO);
 
-    public Guardian updateGuardian(Long id, GuardianDTO guardianDTO);
+    Guardian createGuardian(Guardian guardian);
 
-    public Guardian partialUpdateGuardian(Long id, GuardianDTO guardianDTO);
+    Guardian updateGuardian(Long id, Guardian guardian);
 
-    public void deleteGuardian(Long guardianId);
+    Guardian getGuardian(Long id);
 
-    public Optional<Guardian> getGuardian(Long guardianId);
+    List<Guardian> getAllGuardians();
 
-    public List<Guardian> getAllGuardians();
+    void deleteGuardian(Long id);
+
+    List<Guardian> getGuardiansByFamilyId(Long familyId);
 }

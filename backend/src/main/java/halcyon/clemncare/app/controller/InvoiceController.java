@@ -1,26 +1,17 @@
 package halcyon.clemncare.app.controller;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import halcyon.clemncare.app.dto.InvoiceDTO;
-import halcyon.clemncare.app.exception.FamilyNotFoundException;
+import halcyon.clemncare.app.mapper.InvoiceMapper;
 import halcyon.clemncare.app.model.Invoice;
 import halcyon.clemncare.app.response.ResponseHandler;
 import halcyon.clemncare.app.service.InvoiceService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/invoices")
@@ -29,77 +20,46 @@ public class InvoiceController {
     @Autowired
     private InvoiceService invoiceService;
 
+    @Autowired
+    private InvoiceMapper invoiceMapper;
+
     @GetMapping("/")
-    public ResponseEntity<Object> getInvoices() {
-        List<Invoice> invoices = invoiceService.getAllInvoices();
-        if(invoices.isEmpty()) {
-            return ResponseHandler.responseBuilder("No Invoices Found", HttpStatus.NOT_FOUND, null);
-        } else {
-            return ResponseHandler.responseBuilder("Requested All Invoice Data", HttpStatus.OK, invoices);
-        }
+    public ResponseEntity<Object> getAllInvoices() {
+        List<InvoiceDTO> dtos = invoiceService.getAllInvoices()
+                .stream().map(invoiceMapper::toDTO).collect(Collectors.toList());
+        return ResponseHandler.responseBuilder("All Invoices", HttpStatus.OK, dtos);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getInvoice(@PathVariable Long id) {
-        Optional<Invoice> invoiceOptional = invoiceService.getInvoice(id);
-
-        if (invoiceOptional.isPresent()) {
-            return ResponseHandler.responseBuilder("Requested Specific Invoice Data", HttpStatus.OK, invoiceOptional.get());
-        } else {
-            return ResponseHandler.responseBuilder("Invoice not found", HttpStatus.NOT_FOUND, null);
-        }
+        Invoice invoice = invoiceService.getInvoice(id);
+        return ResponseHandler.responseBuilder("Requested Invoice", HttpStatus.OK, invoiceMapper.toDTO(invoice));
     }
 
-    @GetMapping("/find/family/{familyId}")
-    public ResponseEntity<Object> getInvoicesByFamilyId(@PathVariable Long familyId) {
-        List<Invoice> invoices = invoiceService.findInvoicesByFamilyId(familyId);
-        if(invoices.isEmpty()) {
-            return ResponseHandler.responseBuilder("No Invoices Found", HttpStatus.NOT_FOUND, null);
-        } else {
-            return ResponseHandler.responseBuilder("Requested All Invoice Data for Family ID: " + familyId, HttpStatus.OK, invoices);
-        }
-
+    @GetMapping("/family/{familyId}")
+    public ResponseEntity<Object> getInvoicesByFamily(@PathVariable Long familyId) {
+        List<InvoiceDTO> dtos = invoiceService.getInvoicesByFamilyId(familyId)
+                .stream().map(invoiceMapper::toDTO).collect(Collectors.toList());
+        return ResponseHandler.responseBuilder("Invoices for Family", HttpStatus.OK, dtos);
     }
 
     @PostMapping
-    public ResponseEntity<Object> createInvoice(@RequestBody InvoiceDTO invoiceDTO) {
-        try {
-            Invoice invoice = invoiceService.createInvoice(invoiceDTO);
-            return ResponseHandler.responseBuilder("Invoice Created Successfully", HttpStatus.CREATED, invoice);
-        } catch (FamilyNotFoundException e) {
-            return ResponseHandler.responseBuilder("Family not found", HttpStatus.NOT_FOUND, null);
-        } catch (Exception e) {
-            return ResponseHandler.responseBuilder("Error Creating Invoice", HttpStatus.INTERNAL_SERVER_ERROR, null);
-        }
+    public ResponseEntity<Object> createInvoice(@RequestBody InvoiceDTO dto) {
+        Invoice invoice = invoiceMapper.toEntity(dto);
+        Invoice saved = invoiceService.createInvoice(invoice);
+        return ResponseHandler.responseBuilder("Invoice Created", HttpStatus.CREATED, invoiceMapper.toDTO(saved));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateInvoice(@RequestBody Long id, InvoiceDTO invoiceDTO) {
-        try {
-            Invoice updatedInvoice = invoiceService.partialUpdateInvoice(id, invoiceDTO);
-            if(updatedInvoice != null) {
-                return ResponseHandler.responseBuilder("Invoice Updated Successfully", HttpStatus.OK, updatedInvoice);
-            } else {
-                return ResponseHandler.responseBuilder("Invoice with ID " + id + " not found", HttpStatus.NOT_FOUND, null);
-            }
-        } catch (Exception e) {
-            return ResponseHandler.responseBuilder("Error Updating Invoice", HttpStatus.INTERNAL_SERVER_ERROR, null);
-        }
-    }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<Object> patchInvoice(@RequestBody InvoiceDTO invoiceDTO, @PathVariable Long id) {
-        try{
-            Invoice updatedInvoice = invoiceService.partialUpdateInvoice(id, invoiceDTO);
-            return ResponseHandler.responseBuilder("Invoice Updated Successfully", HttpStatus.OK, updatedInvoice);
-        } catch (Exception e) {
-            return ResponseHandler.responseBuilder("Error Updating Invoice", HttpStatus.INTERNAL_SERVER_ERROR, null);
-        }
+    public ResponseEntity<Object> updateInvoice(@PathVariable Long id, @RequestBody InvoiceDTO dto) {
+        Invoice invoice = invoiceMapper.toEntity(dto);
+        Invoice updated = invoiceService.updateInvoice(id, invoice);
+        return ResponseHandler.responseBuilder("Invoice Updated", HttpStatus.OK, invoiceMapper.toDTO(updated));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteInvoice(@PathVariable Long id) {
-            invoiceService.deleteInvoice(id);
-            return ResponseHandler.responseBuilder("Invoice Deleted Successfully", HttpStatus.OK, null);
+        invoiceService.deleteInvoice(id);
+        return ResponseHandler.responseBuilder("Invoice Deleted", HttpStatus.OK, null);
     }
 }

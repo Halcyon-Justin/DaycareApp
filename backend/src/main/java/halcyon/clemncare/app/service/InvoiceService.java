@@ -1,28 +1,20 @@
 package halcyon.clemncare.app.service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import halcyon.clemncare.app.dto.InvoiceDTO;
 import halcyon.clemncare.app.model.Invoice;
+
+import java.util.List;
 
 public interface InvoiceService {
 
-    public Invoice createInvoice(InvoiceDTO invoiceDTO);
+    Invoice createInvoice(Invoice invoice);
 
-    public Invoice updateInvoice(Long id, InvoiceDTO invoiceDTO);
+    Invoice updateInvoice(Long id, Invoice invoice);
 
-    public Invoice partialUpdateInvoice(Long id, InvoiceDTO invoiceDTO);
+    Invoice getInvoice(Long id);
 
-    public void deleteInvoice(Long invoiceId);
+    List<Invoice> getAllInvoices();
 
-    public Optional<Invoice> getInvoice(Long invoiceId);
+    void deleteInvoice(Long id);
 
-    public List<Invoice> getAllInvoices();
-
-    public List<Invoice> findInvoicesByDueDate(Date dueDate);
-
-    public List<Invoice> findInvoicesByFamilyId(Long familyId);
-
+    List<Invoice> getInvoicesByFamilyId(Long familyId);
 }
