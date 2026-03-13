@@ -1,5 +1,5 @@
 <script>
-  import { user } from '../stores/user.js'; // import the Svelte store
+  import { user } from '../stores/userStore.js'; // import the Svelte store
   let username = '';
   let password = '';
   let error = '';

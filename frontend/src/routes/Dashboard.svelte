@@ -1,25 +1,29 @@
 <script>
-  import { user } from '../stores/user.js';
   import ActiveChildren from './ActiveChildren.svelte';
   import DaycareData from './DaycareData.svelte';
 
   let activeTab = 'activeChildren';
 
-  // Check if user is admin
-  const isAdmin = $user?.role?.name === 'ADMIN';
+  function switchTab(tab) {
+    activeTab = tab;
+  }
 </script>
 
-<nav>
-  <button on:click={() => activeTab = 'activeChildren'}>Active Children</button>
-  {#if isAdmin}
-    <button on:click={() => activeTab = 'daycareData'}>Daycare Data</button>
-  {/if}
-</nav>
+<!-- Tabs -->
+<div class="tabs mb-4">
+  <button class="tab tab-lifted" class:tab-active={activeTab === 'activeChildren'} on:click={() => switchTab('activeChildren')}>
+    Active Children
+  </button>
+  <button class="tab tab-lifted" class:tab-active={activeTab === 'daycareData'} on:click={() => switchTab('daycareData')}>
+    Daycare Data
+  </button>
+</div>
 
-<main>
+<!-- Tab content -->
+<div class="mt-4">
   {#if activeTab === 'activeChildren'}
     <ActiveChildren />
   {:else if activeTab === 'daycareData'}
     <DaycareData />
   {/if}
-</main>
+</div>
