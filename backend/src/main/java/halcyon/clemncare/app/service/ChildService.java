@@ -19,4 +19,6 @@ public interface ChildService {
     public List<Child> getAllChildren();
 
     public List<Child> findChildrenByAge(int age);
+
+    public List<Child> getActiveChildren();
 }

@@ -74,34 +74,35 @@ public class ChildController {
     }
 
     @PutMapping("/{id}")
-public ResponseEntity<Object> updateChild(@PathVariable Long id, @RequestBody ChildDTO childDTO) {
-    try {
-        logger.info("Updating child with ID: {}", id);
-        
-        Child updatedChild = childService.updateChild(id, childDTO);
-        
-        if (updatedChild != null) {
-            logger.info("Child Updated Successfully: {}", updatedChild);
-            return ResponseHandler.responseBuilder("Child Updated Successfully", HttpStatus.OK, updatedChild);
-        } else {
-            logger.warn("Child with ID {} not found", id);
-            return ResponseHandler.responseBuilder("Child with ID " + id + " not found", HttpStatus.NOT_FOUND, null);
-        }
-    } catch (Exception e) {
-        logger.error("Child Update Failed", e);
-        return ResponseHandler.responseBuilder("Child Update Failed", HttpStatus.BAD_REQUEST, null);
-    }
-}
-
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<Object> partialUpdateChild( @PathVariable Long id, @RequestBody ChildDTO childDTO) {
+    public ResponseEntity<Object> updateChild(@PathVariable Long id, @RequestBody ChildDTO childDTO) {
         try {
-            Child updatedChild = childService.partialUpdateChild(id, childDTO);
-            if(updatedChild != null) {
+            logger.info("Updating child with ID: {}", id);
+
+            Child updatedChild = childService.updateChild(id, childDTO);
+
+            if (updatedChild != null) {
+                logger.info("Child Updated Successfully: {}", updatedChild);
                 return ResponseHandler.responseBuilder("Child Updated Successfully", HttpStatus.OK, updatedChild);
             } else {
-                return ResponseHandler.responseBuilder("Child with ID " + id + " not found", HttpStatus.NOT_FOUND, null);
+                logger.warn("Child with ID {} not found", id);
+                return ResponseHandler.responseBuilder("Child with ID " + id + " not found", HttpStatus.NOT_FOUND,
+                        null);
+            }
+        } catch (Exception e) {
+            logger.error("Child Update Failed", e);
+            return ResponseHandler.responseBuilder("Child Update Failed", HttpStatus.BAD_REQUEST, null);
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> partialUpdateChild(@PathVariable Long id, @RequestBody ChildDTO childDTO) {
+        try {
+            Child updatedChild = childService.partialUpdateChild(id, childDTO);
+            if (updatedChild != null) {
+                return ResponseHandler.responseBuilder("Child Updated Successfully", HttpStatus.OK, updatedChild);
+            } else {
+                return ResponseHandler.responseBuilder("Child with ID " + id + " not found", HttpStatus.NOT_FOUND,
+                        null);
             }
         } catch (Exception e) {
             return ResponseHandler.responseBuilder("Child Update Failed", HttpStatus.BAD_REQUEST, null);
@@ -110,12 +111,21 @@ public ResponseEntity<Object> updateChild(@PathVariable Long id, @RequestBody Ch
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteChild(@PathVariable Long id) {
-        if(childService.getChild(id) != null) {
+        if (childService.getChild(id) != null) {
             childService.deleteChild(id);
             return ResponseHandler.responseBuilder("Child Deleted Successfully", HttpStatus.OK, null);
         } else {
-            return ResponseHandler.responseBuilder("Child with ID " + id + " not found. Could not delete.", HttpStatus.NOT_FOUND, null);
+            return ResponseHandler.responseBuilder("Child with ID " + id + " not found. Could not delete.",
+                    HttpStatus.NOT_FOUND, null);
         }
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<Object> getActiveChildren() {
+        return ResponseHandler.responseBuilder(
+                "Active Children Data",
+                HttpStatus.OK,
+                childService.getActiveChildren());
     }
 
 }

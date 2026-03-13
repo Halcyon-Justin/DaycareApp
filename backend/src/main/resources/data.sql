@@ -1,5 +1,9 @@
 -- To avoid foreign-key issues IN ORDER:
 
+-- roles
+
+-- users
+
 -- home_address
 
 -- family
@@ -10,6 +14,23 @@
 
 -- invoice
 
+-- =========================
+-- ROLES
+-- =========================
+
+INSERT INTO roles (id,name) VALUES
+(1,'ADMIN'),
+(2,'USER'),
+(3,'GUEST');
+
+-- =========================
+-- USERS
+-- =========================
+
+INSERT INTO users (username,password,role_id,enabled) VALUES
+('admin','$2a$10$BQ/hoaOYzT4A.KZP09NZ8.YwtV1UxXjc8I5GbuP2HukitjLj5830y',1,TRUE),
+('staff','$2a$10$Dow1F9h1u1qP9PqH6vS9KOLn7Yj5pZr4Qq5KjQj9eJpQe4yM6aY2G',2,TRUE),
+('guest','$2a$10$Dow1F9h1u1qP9PqH6vS9KOLn7Yj5pZr4Qq5KjQj9eJpQe4yM6aY2G',3,TRUE);
 
 -- =========================
 -- HOME ADDRESSES

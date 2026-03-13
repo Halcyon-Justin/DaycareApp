@@ -3,7 +3,7 @@ package halcyon.clemncare.app.model;
 import java.util.Collections;
 import java.util.List;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -33,6 +33,7 @@ public class Family {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Child> children;
 
     @JsonManagedReference

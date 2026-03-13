@@ -6,10 +6,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "AppApplication",
+            "name": "Backend",
             "request": "launch",
-            "mainClass": "halcyon.clemncare.app.AppApplication",
-            "projectName": "app"
+            "mainClass": "halcyon.clemncare.app.AppApplication"
         }
     ]
 }

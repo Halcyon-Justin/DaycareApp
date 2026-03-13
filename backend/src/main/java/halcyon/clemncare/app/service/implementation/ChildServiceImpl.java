@@ -102,6 +102,10 @@ public class ChildServiceImpl implements ChildService {
         }
     }
 
+    public List<Child> getActiveChildren() {
+        return childRepository.findByIsActiveTrue();
+    }
+
     private String[] getNullPropertyNames(ChildDTO childDTO) {
         final BeanWrapper src = new BeanWrapperImpl(childDTO);
         PropertyDescriptor[] pds = src.getPropertyDescriptors();

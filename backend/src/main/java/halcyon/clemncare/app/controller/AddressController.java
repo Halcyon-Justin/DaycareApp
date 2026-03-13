@@ -21,8 +21,8 @@ import halcyon.clemncare.app.response.ResponseHandler;
 import halcyon.clemncare.app.service.HomeAddressService;
 
 @RestController
-@RequestMapping("/api/homeaddresses")
-public class HomeAddressController {
+@RequestMapping("/api/addresses")
+public class AddressController {
 
     @Autowired
     private HomeAddressService homeAddressService;

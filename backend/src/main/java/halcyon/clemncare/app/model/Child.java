@@ -1,6 +1,9 @@
 package halcyon.clemncare.app.model;
 
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +32,7 @@ public class Child {
     private LocalDate dateOfBirth;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "family_id")
     private Family family;
 
