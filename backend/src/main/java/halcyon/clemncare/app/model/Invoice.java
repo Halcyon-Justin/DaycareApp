@@ -1,6 +1,8 @@
 package halcyon.clemncare.app.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -16,6 +18,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,13 +41,30 @@ public class Invoice extends TimeStampedEntity {
     @JoinColumn(name = "family_id")
     private Family family;
 
+    @Column(columnDefinition = "BIGINT default 0")
+    private BigDecimal amount;
+
     private LocalDate dueDate;
 
-    @Column(columnDefinition = "BIGINT default 0")
-    private Long amountDue;
+    private LocalDate payDate;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(20) DEFAULT 'UNPAID'")
     private InvoiceStatus status;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
     
 }

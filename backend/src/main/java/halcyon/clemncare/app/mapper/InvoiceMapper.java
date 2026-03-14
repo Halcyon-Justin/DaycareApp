@@ -15,7 +15,8 @@ public class InvoiceMapper {
         dto.setId(invoice.getId());
         dto.setFamilyId(invoice.getFamily() != null ? invoice.getFamily().getId() : null);
         dto.setDueDate(invoice.getDueDate());
-        dto.setAmountDue(invoice.getAmountDue());
+        dto.setPayDate(invoice.getPayDate());
+        dto.setAmount(invoice.getAmount());
         dto.setStatus(invoice.getStatus());
 
         return dto;
@@ -27,7 +28,8 @@ public class InvoiceMapper {
         Invoice invoice = new Invoice();
         invoice.setId(dto.getId());
         invoice.setDueDate(dto.getDueDate());
-        invoice.setAmountDue(dto.getAmountDue());
+        invoice.setPayDate(dto.getPayDate());
+        invoice.setAmount(dto.getAmount());
         invoice.setStatus(dto.getStatus());
 
         if (dto.getFamilyId() != null) {

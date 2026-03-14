@@ -18,8 +18,6 @@ public class GuardianMapper {
         dto.setPhoneNumber(guardian.getPhoneNumber());
         dto.setEmailAddress(guardian.getEmailAddress());
         dto.setFamilyId(guardian.getFamily() != null ? guardian.getFamily().getId() : null);
-        dto.setRelationship(guardian.getRelationship());
-        dto.setEmergencyContact(guardian.isEmergencyContact());
 
         return dto;
     }
@@ -33,8 +31,6 @@ public class GuardianMapper {
         guardian.setLastName(dto.getLastName());
         guardian.setPhoneNumber(dto.getPhoneNumber());
         guardian.setEmailAddress(dto.getEmailAddress());
-        guardian.setRelationship(dto.getRelationship());
-        guardian.setEmergencyContact(dto.isEmergencyContact());
 
         if (dto.getFamilyId() != null) {
             Family family = new Family();

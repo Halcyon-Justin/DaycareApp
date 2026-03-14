@@ -15,21 +15,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import halcyon.clemncare.app.dto.HomeAddressDTO;
-import halcyon.clemncare.app.model.HomeAddress;
+import halcyon.clemncare.app.dto.AddressDTO;
+import halcyon.clemncare.app.model.Address;
 import halcyon.clemncare.app.response.ResponseHandler;
-import halcyon.clemncare.app.service.HomeAddressService;
+import halcyon.clemncare.app.service.AddressService;
 
 @RestController
 @RequestMapping("/api/addresses")
 public class AddressController {
 
     @Autowired
-    private HomeAddressService homeAddressService;
+    private AddressService homeAddressService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getHomeAddress(@PathVariable Long id) {
-        Optional<HomeAddress> addressOptional = homeAddressService.getAddress(id);
+        Optional<Address> addressOptional = homeAddressService.getAddress(id);
         if (addressOptional.isPresent()) {
             return ResponseHandler.responseBuilder("Requested Specific Address Data", HttpStatus.OK,
                     addressOptional.get());
@@ -39,9 +39,9 @@ public class AddressController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createAddress(@RequestBody HomeAddressDTO homeAddressDTO) {
+    public ResponseEntity<Object> createAddress(@RequestBody AddressDTO homeAddressDTO) {
         try {
-            HomeAddress createdAddress = homeAddressService.createAddress(homeAddressDTO);
+            Address createdAddress = homeAddressService.createAddress(homeAddressDTO);
             return ResponseHandler.responseBuilder("Address Created Successfully", HttpStatus.CREATED, createdAddress);
         } catch (Exception e) {
             return ResponseHandler.responseBuilder("Address Creation Failed", HttpStatus.BAD_REQUEST, null);
@@ -49,9 +49,9 @@ public class AddressController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateAddress(@RequestBody Long id, HomeAddressDTO homeAddressDTO) {
+    public ResponseEntity<Object> updateAddress(@RequestBody Long id, AddressDTO homeAddressDTO) {
         try {
-            HomeAddress updatedAddress = homeAddressService.updateAddress(id, homeAddressDTO);
+            Address updatedAddress = homeAddressService.updateAddress(id, homeAddressDTO);
             if (updatedAddress != null) {
                 return ResponseHandler.responseBuilder("Address Updated Successfully", HttpStatus.OK, updatedAddress);
             } else {
@@ -63,9 +63,9 @@ public class AddressController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> partialUpdateAddress(@RequestBody Long id, HomeAddressDTO homeAddressDTO) {
+    public ResponseEntity<Object> partialUpdateAddress(@RequestBody Long id, AddressDTO homeAddressDTO) {
         try {
-            HomeAddress updatedAddress = homeAddressService.partialUpdateAddress(id, homeAddressDTO);
+            Address updatedAddress = homeAddressService.partialUpdateAddress(id, homeAddressDTO);
             if (updatedAddress != null) {
                 return ResponseHandler.responseBuilder("Address Updated Successfully", HttpStatus.OK, updatedAddress);
             } else {

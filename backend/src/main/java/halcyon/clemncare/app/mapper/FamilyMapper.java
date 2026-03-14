@@ -5,7 +5,7 @@ import halcyon.clemncare.app.model.Child;
 import halcyon.clemncare.app.model.Family;
 import halcyon.clemncare.app.model.Guardian;
 import halcyon.clemncare.app.model.Invoice;
-import halcyon.clemncare.app.model.HomeAddress;
+import halcyon.clemncare.app.model.Address;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public class FamilyMapper {
         family.setId(dto.getId());
 
         if (dto.getAddressId() != null) {
-            HomeAddress address = new HomeAddress();
+            Address address = new Address();
             address.setId(dto.getAddressId());
             family.setAddress(address);
         }

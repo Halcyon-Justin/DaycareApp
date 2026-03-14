@@ -11,30 +11,30 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import halcyon.clemncare.app.dto.HomeAddressDTO;
+import halcyon.clemncare.app.dto.AddressDTO;
 import halcyon.clemncare.app.exception.AddressNotFoundException;
-import halcyon.clemncare.app.model.HomeAddress;
+import halcyon.clemncare.app.model.Address;
 import halcyon.clemncare.app.repositories.HomeAddressRepository;
-import halcyon.clemncare.app.service.HomeAddressService;
+import halcyon.clemncare.app.service.AddressService;
 
 @Service
-public class HomeAddressServiceImpl implements HomeAddressService {
+public class AddressServiceImpl implements AddressService {
 
     @Autowired
     private HomeAddressRepository homeAddressRepository;
 
     @Override
-    public HomeAddress createAddress(HomeAddressDTO addressDTO) {
-        HomeAddress address = new HomeAddress();
+    public Address createAddress(AddressDTO addressDTO) {
+        Address address = new Address();
         BeanUtils.copyProperties(addressDTO, address);
         return homeAddressRepository.save(address);
     }
 
     @Override
-    public HomeAddress updateAddress(Long id, HomeAddressDTO addressDTO) {
-        Optional<HomeAddress> optionalAddress = homeAddressRepository.findById(id);
+    public Address updateAddress(Long id, AddressDTO addressDTO) {
+        Optional<Address> optionalAddress = homeAddressRepository.findById(id);
         if (optionalAddress.isPresent()) {
-            HomeAddress existingAddress = optionalAddress.get();
+            Address existingAddress = optionalAddress.get();
             BeanUtils.copyProperties(addressDTO, existingAddress);
             return homeAddressRepository.save(existingAddress);
         } else {
@@ -43,10 +43,10 @@ public class HomeAddressServiceImpl implements HomeAddressService {
     }
 
     @Override
-    public HomeAddress partialUpdateAddress(Long id, HomeAddressDTO addressDTO) {
-        Optional<HomeAddress> optionalAddress = homeAddressRepository.findById(id);
+    public Address partialUpdateAddress(Long id, AddressDTO addressDTO) {
+        Optional<Address> optionalAddress = homeAddressRepository.findById(id);
         if (optionalAddress.isPresent()) {
-            HomeAddress existingAddress = optionalAddress.get();
+            Address existingAddress = optionalAddress.get();
             BeanUtils.copyProperties(addressDTO, existingAddress, getNullPropertyNames(addressDTO));
             return homeAddressRepository.save(existingAddress);
         } else {
@@ -60,11 +60,11 @@ public class HomeAddressServiceImpl implements HomeAddressService {
     }
 
     @Override
-    public Optional<HomeAddress> getAddress(Long addressId) {
+    public Optional<Address> getAddress(Long addressId) {
         return homeAddressRepository.findById(addressId);
     }
 
-    private String[] getNullPropertyNames(HomeAddressDTO homeAddressDTO) {
+    private String[] getNullPropertyNames(AddressDTO homeAddressDTO) {
         final BeanWrapper src = new BeanWrapperImpl(homeAddressDTO);
         PropertyDescriptor[] pds = src.getPropertyDescriptors();
 

@@ -41,8 +41,6 @@ public class GuardianServiceImpl implements GuardianService {
         if (guardian.getLastName() != null) existing.setLastName(guardian.getLastName());
         if (guardian.getPhoneNumber() != null) existing.setPhoneNumber(guardian.getPhoneNumber());
         if (guardian.getEmailAddress() != null) existing.setEmailAddress(guardian.getEmailAddress());
-        if (guardian.getRelationship() != null) existing.setRelationship(guardian.getRelationship());
-        existing.setEmergencyContact(guardian.isEmergencyContact());
 
         if (guardian.getFamily() != null && guardian.getFamily().getId() != null) {
             Family family = familyRepository.findById(guardian.getFamily().getId())

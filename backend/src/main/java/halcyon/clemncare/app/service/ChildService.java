@@ -2,6 +2,9 @@ package halcyon.clemncare.app.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import halcyon.clemncare.app.model.Child;
 
 public interface ChildService {
@@ -15,9 +18,9 @@ public interface ChildService {
 
     Child getChild(Long childId);
 
-    List<Child> getAllChildren();
+    Page<Child> getAllChildren(Pageable pageable);
 
     List<Child> findChildrenByAge(int age);
 
-    List<Child> getActiveChildren();
+    List<Child> getEnrolledChildren();
 }

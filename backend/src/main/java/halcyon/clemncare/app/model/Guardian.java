@@ -2,11 +2,7 @@ package halcyon.clemncare.app.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import halcyon.clemncare.app.enums.Relationship;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,12 +28,6 @@ public class Guardian {
     @ManyToOne
     @JoinColumn(name = "family_id")
     private Family family;
-
-    @Enumerated(EnumType.STRING)
-    private Relationship relationship;
-
-    @Column(columnDefinition = "BOOLEAN DEFAULT 'FALSE'")
-    private boolean isEmergencyContact;
 
     public String getName() {
         return firstName + " " + lastName;

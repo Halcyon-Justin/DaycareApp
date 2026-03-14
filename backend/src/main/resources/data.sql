@@ -4,7 +4,7 @@
 
 -- users
 
--- home_address
+-- address
 
 -- family
 
@@ -33,10 +33,10 @@ INSERT INTO users (username,password,role_id,enabled) VALUES
 ('guest','$2a$10$Dow1F9h1u1qP9PqH6vS9KOLn7Yj5pZr4Qq5KjQj9eJpQe4yM6aY2G',3,TRUE);
 
 -- =========================
--- HOME ADDRESSES
+-- ADDRESSES
 -- =========================
 
-INSERT INTO home_address (street_address, city, state, zip_code) VALUES
+INSERT INTO address (street_address, city, state, zip_code) VALUES
 ('123 Maple St','Springfield','IL','62701'),
 ('456 Oak Ave','Madison','WI','53703'),
 ('789 Pine Dr','Minneapolis','MN','55401'),
@@ -58,58 +58,79 @@ INSERT INTO family (address_id) VALUES
 -- CHILDREN
 -- =========================
 
-INSERT INTO child (first_name,last_name,date_of_birth,is_active,family_id,notes) VALUES
-('Emma','Smith','2016-04-12',TRUE,1,'Enjoys soccer'),
-('Liam','Smith','2014-09-03',TRUE,1,'Allergic to peanuts'),
+INSERT INTO child (first_name,last_name,date_of_birth,family_id,enrollment_date,withdrawal_date,notes) VALUES
+('Emma','Smith','2016-04-12',1,'2016-04-12','2016-04-12','Enjoys soccer'),
+('Liam','Smith','2014-09-03',1,'2016-04-12','2016-04-12','Allergic to peanuts'),
 
-('Olivia','Johnson','2018-01-22',TRUE,2,'Loves drawing'),
-('Noah','Johnson','2015-07-15',FALSE,2,'Moved recently'),
+('Olivia','Johnson','2018-01-22',2,'2016-04-12','2016-04-12','Loves drawing'),
+('Noah','Johnson','2015-07-15',2,'2016-04-12','2016-04-12','Moved recently'),
 
-('Ava','Williams','2017-11-30',TRUE,3,'Very talkative'),
-('Ethan','Williams','2013-06-08',TRUE,3,'Enjoys math puzzles'),
+('Ava','Williams','2017-11-30',3,'2016-04-12','2016-04-12','Very talkative'),
+('Ethan','Williams','2013-06-08',3,'2016-04-12','2016-04-12','Enjoys math puzzles'),
 
-('Sophia','Brown','2019-02-14',TRUE,4,'Loves animals'),
-('Mason','Brown','2012-10-21',FALSE,4,'Transferred schools'),
+('Sophia','Brown','2019-02-14',4,'2016-04-12','2016-04-12','Loves animals'),
+('Mason','Brown','2012-10-21',4,'2016-04-12','2016-04-12','Transferred schools'),
 
-('Isabella','Davis','2016-05-05',TRUE,5,'Plays piano'),
-('Lucas','Davis','2014-12-18',TRUE,5,'Very competitive in sports');
+('Isabella','Davis','2016-05-05',5,'2016-04-12','2016-04-12','Plays piano'),
+('Lucas','Davis','2014-12-18',5,'2016-04-12','2016-04-12','Very competitive in sports');
 
 -- =========================
 -- GUARDIANS
 -- =========================
 
-INSERT INTO guardian (first_name,last_name,phone_number,email_address,family_id,relationship,is_emergency_contact) VALUES
-('John','Smith','5551001','[john.smith@email.com](mailto:john.smith@email.com)',1,'FATHER',TRUE),
-('Sarah','Smith','5551002','[sarah.smith@email.com](mailto:sarah.smith@email.com)',1,'MOTHER',FALSE),
+INSERT INTO guardian (first_name,last_name,phone_number,email_address,family_id) VALUES
+('John','Smith','5551001','[john.smith@email.com](mailto:john.smith@email.com)',1),
+('Sarah','Smith','5551002','[sarah.smith@email.com](mailto:sarah.smith@email.com)',1),
 
-('David','Johnson','5552001','[david.johnson@email.com](mailto:david.johnson@email.com)',2,'FATHER',TRUE),
-('Emily','Johnson','5552002','[emily.johnson@email.com](mailto:emily.johnson@email.com)',2,'MOTHER',FALSE),
+('David','Johnson','5552001','[david.johnson@email.com](mailto:david.johnson@email.com)',2),
+('Emily','Johnson','5552002','[emily.johnson@email.com](mailto:emily.johnson@email.com)',2),
 
-('Michael','Williams','5553001','[michael.williams@email.com](mailto:michael.williams@email.com)',3,'FATHER',TRUE),
-('Laura','Williams','5553002','[laura.williams@email.com](mailto:laura.williams@email.com)',3,'MOTHER',FALSE),
+('Michael','Williams','5553001','[michael.williams@email.com](mailto:michael.williams@email.com)',3),
+('Laura','Williams','5553002','[laura.williams@email.com](mailto:laura.williams@email.com)',3),
 
-('Robert','Brown','5554001','[robert.brown@email.com](mailto:robert.brown@email.com)',4,'FATHER',TRUE),
-('Karen','Brown','5554002','[karen.brown@email.com](mailto:karen.brown@email.com)',4,'MOTHER',FALSE),
+('Robert','Brown','5554001','[robert.brown@email.com](mailto:robert.brown@email.com)',4),
+('Karen','Brown','5554002','[karen.brown@email.com](mailto:karen.brown@email.com)',4),
 
-('Daniel','Davis','5555001','[daniel.davis@email.com](mailto:daniel.davis@email.com)',5,'FATHER',TRUE),
-('Michelle','Davis','5555002','[michelle.davis@email.com](mailto:michelle.davis@email.com)',5,'MOTHER',FALSE);
+('Daniel','Davis','5555001','[daniel.davis@email.com](mailto:daniel.davis@email.com)',5),
+('Michelle','Davis','5555002','[michelle.davis@email.com](mailto:michelle.davis@email.com)',5);
 
 -- =========================
 -- INVOICES
 -- =========================
 
-INSERT INTO invoice (family_id,due_date,amount_due,status) VALUES
-(1,'2026-01-15',15000,'UNPAID'),
-(1,'2026-02-15',12000,'UNPAID'),
+INSERT INTO invoice (family_id,due_date,pay_date,amount,status) VALUES
+(1,'2026-01-15','2026-01-15',15000,'UNPAID'),
+(1,'2026-02-15','2026-01-15',12000,'UNPAID'),
 
-(2,'2026-01-10',18000,'UNPAID'),
-(2,'2026-03-01',9500,'UNPAID'),
+(2,'2026-01-10','2026-01-15',18000,'UNPAID'),
+(2,'2026-03-01','2026-01-15',9500,'UNPAID'),
 
-(3,'2026-02-01',21000,'UNPAID'),
-(3,'2026-03-01',14000,'UNPAID'),
+(3,'2026-02-01','2026-01-15',21000,'UNPAID'),
+(3,'2026-03-01','2026-01-15',14000,'UNPAID'),
 
-(4,'2026-01-20',8000,'UNPAID'),
-(4,'2026-02-20',8000,'UNPAID'),
+(4,'2026-01-20','2026-01-15',8000,'UNPAID'),
+(4,'2026-02-20','2026-01-15',8000,'UNPAID'),
 
-(5,'2026-01-25',17500,'UNPAID'),
-(5,'2026-02-25',17500,'UNPAID');
+(5,'2026-01-25','2026-01-15',17500,'UNPAID'),
+(5,'2026-02-25','2026-01-15',17500,'UNPAID');
+
+
+UPDATE family
+set primary_guardian_id = 1
+where id = 1;
+
+UPDATE family
+set primary_guardian_id = 3
+where id = 2;
+
+UPDATE family
+set primary_guardian_id = 5
+where id = 3;
+
+UPDATE family
+set primary_guardian_id = 7
+where id = 4;
+
+UPDATE family
+set primary_guardian_id = 9
+where id = 5;

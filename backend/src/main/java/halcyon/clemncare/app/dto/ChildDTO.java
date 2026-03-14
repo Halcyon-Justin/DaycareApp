@@ -1,24 +1,37 @@
 package halcyon.clemncare.app.dto;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
 
-import halcyon.clemncare.app.enums.DayOfWeek;
+import halcyon.clemncare.app.enums.EnrollmentStatus;
 import lombok.Data;
 
 @Data
 public class ChildDTO {
 
     private Long id;
+
     private String firstName;
+
     private String lastName;
+
     private LocalDate dateOfBirth;
-    private Long familyId;
-    private List<String> allergies;
-    private Set<DayOfWeek> frequency;
-    private boolean isActive;
+
+    private Integer age;
+
+    private String allergies;
+
     private String notes;
 
+    private Long familyId;
 
+    private LocalDate enrollmentDate;
+
+    private LocalDate withdrawalDate;
+
+    private EnrollmentStatus status;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 }

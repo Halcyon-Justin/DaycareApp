@@ -38,7 +38,8 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .orElseThrow(() -> new InvoiceNotFoundException("Invoice with ID " + id + " not found"));
 
         if (invoice.getDueDate() != null) existing.setDueDate(invoice.getDueDate());
-        if (invoice.getAmountDue() != null) existing.setAmountDue(invoice.getAmountDue());
+        if (invoice.getPayDate() != null) existing.setPayDate(invoice.getPayDate());
+        if (invoice.getAmount() != null) existing.setAmount(invoice.getAmount());
         if (invoice.getStatus() != null) existing.setStatus(invoice.getStatus());
 
         if (invoice.getFamily() != null && invoice.getFamily().getId() != null) {

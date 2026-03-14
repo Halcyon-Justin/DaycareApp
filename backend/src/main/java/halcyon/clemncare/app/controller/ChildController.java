@@ -6,6 +6,7 @@ import halcyon.clemncare.app.model.Child;
 import halcyon.clemncare.app.response.ResponseHandler;
 import halcyon.clemncare.app.service.ChildService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,8 @@ public class ChildController {
     private ChildMapper childMapper;
 
     @GetMapping("/")
-    public ResponseEntity<Object> getAllChildren() {
-        List<ChildDTO> dtos = childService.getAllChildren()
+    public ResponseEntity<Object> getAllChildren(Pageable pageable) {
+        List<ChildDTO> dtos = childService.getAllChildren(pageable)
                 .stream()
                 .map(childMapper::toDTO)
                 .collect(Collectors.toList());
@@ -49,7 +50,7 @@ public class ChildController {
 
     @GetMapping("/active")
     public ResponseEntity<Object> getActiveChildren() {
-        List<ChildDTO> dtos = childService.getActiveChildren()
+        List<ChildDTO> dtos = childService.getEnrolledChildren()
                 .stream()
                 .map(childMapper::toDTO)
                 .collect(Collectors.toList());

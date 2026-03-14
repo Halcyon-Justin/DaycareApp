@@ -11,20 +11,27 @@ import java.util.stream.Collectors;
 @Component
 public class ChildMapper {
 
-    // Convert Entity to DTO
     public ChildDTO toDTO(Child child) {
-        if (child == null) return null;
 
         ChildDTO dto = new ChildDTO();
+
         dto.setId(child.getId());
         dto.setFirstName(child.getFirstName());
         dto.setLastName(child.getLastName());
         dto.setDateOfBirth(child.getDateOfBirth());
-        dto.setActive(child.isActive());
+        dto.setAge(child.getAge());
         dto.setNotes(child.getNotes());
-        dto.setFamilyId(child.getFamily() != null ? child.getFamily().getId() : null);
-        // dto.setName(child.getName()); // optional, for frontend
-        // dto.setAge(child.getAge());   // optional, for frontend
+
+        if (child.getFamily() != null) {
+            dto.setFamilyId(child.getFamily().getId());
+        }
+
+        dto.setEnrollmentDate(child.getEnrollmentDate());
+        dto.setWithdrawalDate(child.getWithdrawalDate());
+        dto.setStatus(child.getStatus());
+
+        dto.setCreatedAt(child.getCreatedAt());
+        dto.setUpdatedAt(child.getUpdatedAt());
 
         return dto;
     }
@@ -38,7 +45,7 @@ public class ChildMapper {
         child.setFirstName(dto.getFirstName());
         child.setLastName(dto.getLastName());
         child.setDateOfBirth(dto.getDateOfBirth());
-        child.setActive(dto.isActive());
+        child.setStatus(dto.getStatus());
         child.setNotes(dto.getNotes());
 
         if (dto.getFamilyId() != null) {

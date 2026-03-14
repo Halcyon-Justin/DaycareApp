@@ -1,17 +1,25 @@
 package halcyon.clemncare.app.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import halcyon.clemncare.app.enums.EnrollmentStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -32,28 +40,58 @@ public class Child {
     private LocalDate dateOfBirth;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnore
     @JoinColumn(name = "family_id")
     private Family family;
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT 'FALSE'")
-    private boolean isActive;
+    private LocalDate enrollmentDate;
+
+    private LocalDate withdrawalDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(20) DEFAULT 'ENROLLED'")
+    private EnrollmentStatus status;
 
     @Column
     private String notes;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     public String getName() {
         return firstName + " " + lastName;
     }
 
+    @Transient
     public int getAge() {
-        if (dateOfBirth != null && !dateOfBirth.isEqual(LocalDate.of(1900, 1, 1))) {
-            LocalDate now = LocalDate.now();
-            return now.getYear() - dateOfBirth.getYear();
-        } else {
-            return LocalDate.now().getYear() - 1900;
+        if (dateOfBirth == null) {
+            return 0;
         }
 
+        return Period.between(dateOfBirth, LocalDate.now()).getYears();
+    }
+
+    @Transient
+    public int getAgeInMonths() {
+
+        if (dateOfBirth == null) {
+            return 0;
+        }
+
+        return Period.between(dateOfBirth, LocalDate.now()).getYears() * 12
+                + Period.between(dateOfBirth, LocalDate.now()).getMonths();
     }
 
     @Override
@@ -63,7 +101,8 @@ public class Child {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
-                ", isActive=" + isActive +
+                ", age=" + getAge() +
+                ", enrollmentStatus=" + status +
                 ", notes='" + notes + '\'' +
                 '}';
     }
