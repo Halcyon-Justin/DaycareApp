@@ -4,5 +4,6 @@ public enum EnrollmentStatus {
     ENROLLED,
     WAITLIST,
     WITHDRAWN,
-    GRADUATED
+    GRADUATED,
+    SUSPENDED
 }

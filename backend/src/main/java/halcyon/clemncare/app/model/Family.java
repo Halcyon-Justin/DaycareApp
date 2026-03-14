@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import halcyon.clemncare.app.enums.EnrollmentStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,11 +31,11 @@ public class Family {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Child> children;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Guardian> guardians;
 
     @OneToOne
@@ -42,7 +43,7 @@ public class Family {
     private Guardian primaryGuardian;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Invoice> invoices;
 
     public boolean hasActiveChildren() {

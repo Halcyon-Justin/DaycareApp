@@ -19,8 +19,6 @@ public class ChildDTO {
 
     private Integer age;
 
-    private String allergies;
-
     private String notes;
 
     private Long familyId;

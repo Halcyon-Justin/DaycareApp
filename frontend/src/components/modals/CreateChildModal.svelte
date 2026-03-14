@@ -1,17 +1,32 @@
 <script>
     import { createEventDispatcher } from "svelte";
 
-    export let child;
     export let open = false;
 
     const dispatch = createEventDispatcher();
+
+    let child = {
+        firstName: "",
+        lastName: "",
+        dateOfBirth: "",
+        status: "WAITLIST",
+        notes: "",
+    };
 
     function cancel() {
         dispatch("cancel");
     }
 
     function save() {
-        dispatch("save", child);
+        dispatch("create", child);
+
+        child = {
+            firstName: "",
+            lastName: "",
+            dateOfBirth: "",
+            status: "WAITLIST",
+            notes: "",
+        };
     }
 </script>
 
@@ -20,7 +35,7 @@
         class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30"
     >
         <div class="bg-white p-6 rounded w-96">
-            <h2 class="text-xl font-bold mb-4">Edit Child</h2>
+            <h2 class="text-xl font-bold mb-4">Create Child</h2>
 
             <div class="flex flex-col gap-2">
                 <input
@@ -35,14 +50,12 @@
                     placeholder="Last Name"
                 />
 
-                <label>Date of Birth</label>
                 <input
-                    type="date"
                     class="border p-2"
+                    type="date"
                     bind:value={child.dateOfBirth}
                 />
 
-                <label>Status</label>
                 <select class="border p-2" bind:value={child.status}>
                     <option value="WAITLIST">Waitlist</option>
                     <option value="ENROLLED">Enrolled</option>
@@ -50,20 +63,6 @@
                     <option value="WITHDRAWN">Withdrawn</option>
                     <option value="GRADUATED">Graduated</option>
                 </select>
-
-                <label>Enrollment Date</label>
-                <input
-                    type="date"
-                    class="border p-2"
-                    bind:value={child.enrollmentDate}
-                />
-
-                <label>Withdrawal Date</label>
-                <input
-                    type="date"
-                    class="border p-2"
-                    bind:value={child.withdrawalDate}
-                />
 
                 <textarea
                     class="border p-2"
@@ -78,10 +77,10 @@
                 </button>
 
                 <button
-                    class="px-3 py-1 bg-blue-600 text-white rounded"
+                    class="px-3 py-1 bg-green-600 text-white rounded"
                     on:click={save}
                 >
-                    Save
+                    Create
                 </button>
             </div>
         </div>

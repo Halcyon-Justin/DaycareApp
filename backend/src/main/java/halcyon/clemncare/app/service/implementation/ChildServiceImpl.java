@@ -57,6 +57,10 @@ public class ChildServiceImpl implements ChildService {
         if (child.getDateOfBirth() != null)
             existingChild.setDateOfBirth(child.getDateOfBirth());
         existingChild.setStatus(child.getStatus());
+        if (child.getEnrollmentDate() != null)
+            existingChild.setEnrollmentDate(child.getEnrollmentDate());
+        if (child.getWithdrawalDate() != null)
+            existingChild.setWithdrawalDate(child.getWithdrawalDate());
         if (child.getNotes() != null)
             existingChild.setNotes(child.getNotes());
         if (child.getStatus() != null) {

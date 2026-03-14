@@ -48,15 +48,6 @@ public class ChildController {
         return ResponseHandler.responseBuilder("Children found for the specified age", HttpStatus.OK, dtos);
     }
 
-    @GetMapping("/active")
-    public ResponseEntity<Object> getActiveChildren() {
-        List<ChildDTO> dtos = childService.getEnrolledChildren()
-                .stream()
-                .map(childMapper::toDTO)
-                .collect(Collectors.toList());
-        return ResponseHandler.responseBuilder("Active Children", HttpStatus.OK, dtos);
-    }
-
     @PostMapping
     public ResponseEntity<Object> createChild(@RequestBody ChildDTO dto) {
         Child child = childMapper.toEntity(dto);

@@ -54,6 +54,13 @@ public class ChildMapper {
             child.setFamily(family);
         }
 
+        child.setEnrollmentDate(dto.getEnrollmentDate());
+        child.setWithdrawalDate(dto.getWithdrawalDate());
+        child.setStatus(dto.getStatus());
+
+        child.setCreatedAt(dto.getCreatedAt());
+        child.setUpdatedAt(dto.getUpdatedAt());
+
         return child;
     }
 
