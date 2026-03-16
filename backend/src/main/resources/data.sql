@@ -79,20 +79,20 @@ INSERT INTO child (first_name,last_name,date_of_birth,family_id,enrollment_date,
 -- =========================
 
 INSERT INTO guardian (first_name,last_name,phone_number,email_address,family_id) VALUES
-('John','Smith','5551001','[john.smith@email.com](mailto:john.smith@email.com)',1),
-('Sarah','Smith','5551002','[sarah.smith@email.com](mailto:sarah.smith@email.com)',1),
+('John','Smith','5551001','john.smith@email.com',1),
+('Sarah','Smith','5551002','sarah.smith@email.com',1),
 
-('David','Johnson','5552001','[david.johnson@email.com](mailto:david.johnson@email.com)',2),
-('Emily','Johnson','5552002','[emily.johnson@email.com](mailto:emily.johnson@email.com)',2),
+('David','Johnson','5552001','david.johnson@email.com',2),
+('Emily','Johnson','5552002','emily.johnson@email.com',2),
 
-('Michael','Williams','5553001','[michael.williams@email.com](mailto:michael.williams@email.com)',3),
-('Laura','Williams','5553002','[laura.williams@email.com](mailto:laura.williams@email.com)',3),
+('Michael','Williams','5553001','michael.williams@email.com',3),
+('Laura','Williams','5553002','laura.williams@email.com',3),
 
-('Robert','Brown','5554001','[robert.brown@email.com](mailto:robert.brown@email.com)',4),
-('Karen','Brown','5554002','[karen.brown@email.com](mailto:karen.brown@email.com)',4),
+('Robert','Brown','5554001','robert.brown@email.com',4),
+('Karen','Brown','5554002','karen.brown@email.com',4),
 
-('Daniel','Davis','5555001','[daniel.davis@email.com](mailto:daniel.davis@email.com)',5),
-('Michelle','Davis','5555002','[michelle.davis@email.com](mailto:michelle.davis@email.com)',5);
+('Daniel','Davis','5555001','daniel.davis@email.com',5),
+('Michelle','Davis','5555002','michelle.davis@email.com',5);
 
 -- =========================
 -- INVOICES

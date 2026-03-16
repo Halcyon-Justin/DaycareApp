@@ -20,9 +20,9 @@
             title: "Manage",
             icon: UserRoundPenIcon,
             children: [
-                { title: "Families", url: "#" },
-                { title: "Children", url: "#" },
-                { title: "Guardians", url: "#" },
+                { title: "Families", url: "/families" },
+                { title: "Children", url: "/children" },
+                { title: "Guardians", url: "/guardians" },
             ],
         },
         {
