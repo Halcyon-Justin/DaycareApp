@@ -9,6 +9,7 @@
       children: Child[];
     };
   }>();
+  
 </script>
 
 <h1 class="text-2xl font-bold mb-4">Children</h1>

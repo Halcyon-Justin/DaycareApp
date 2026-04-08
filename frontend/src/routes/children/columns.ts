@@ -29,7 +29,10 @@ export const columns: ColumnDef<Child>[] = [
   },
   {
     accessorKey: "firstName",
-    header: "First Name"
+    header: ({ column }) =>
+      renderComponent(DataTableSortingButton, {
+        onclick: column.getToggleSortingHandler(),
+      }),
   },
   {
     accessorKey: "lastName",
